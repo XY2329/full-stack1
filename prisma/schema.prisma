@@ -1,0 +1,42 @@
+// Prisma schema file: defining different models and relations between them
+// b4 defining models, need to think of dbs design
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// provider: what type of dbs connecting to
+// url: connection string loading the dbs from whr
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid()) //@id: primary key      @default: defines a default value
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt //这样写so that只要user update 他就show最latest的记录
+  email     String   @unique //@unique: defines a unique constraint
+  role      Role     @default(USER) //by default, when user creating acc, they are regular users
+  image     String? //String: cuz contains url    ?: cuz is optional
+  bookmarks Link[]
+}
+
+//enum: a data type to let you define a set of values that is not built in the lang
+enum Role {
+  USER
+  ADMIN
+}
+
+//define the link model
+model Link {
+  id          Int      @id 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  description String
+  url         String
+  imageUrl    String
+  category    String
+  users       User[]
+}
