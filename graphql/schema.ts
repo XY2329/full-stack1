@@ -1,8 +1,9 @@
-import { makeSchema } from "nexus";
+import { makeSchema } from "nexus";     //this can create graphQL schema
 import { join } from "path";
+import * as types from './types'
 
 export const schema = makeSchema({
-    types:[],
+    types,   //all graphQL object types are passed to this array
     outputs:{
         typegen: join(
             process.cwd(),
@@ -11,7 +12,11 @@ export const schema = makeSchema({
             'nexus-typegen',
             'index.d.ts'
         ),
-        schema: join
+        schema: join(process.cwd(), 'graphql', 'schema.graphql'),
+    },
+    contextType:{
+        export: 'Context',
+        module: join(process.cwd(), 'graphql', 'context.ts'),
     }
 })
 
